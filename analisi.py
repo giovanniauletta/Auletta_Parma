@@ -53,10 +53,46 @@ def domanda1(dati):
     }
 
 
-def domanda2(dati):
-    """Risponde alla domanda 2."""
-    return None
+def ms_a_minuti_secondi(ms):
+    """Converte i millisecondi nel formato stringa mm:ss"""
+    secondi_totali = ms // 1000
+    minuti = secondi_totali // 60
+    secondi = secondi_totali % 60
+    return f"{minuti}:{secondi:02d}"
 
+def domanda2(dati):
+    # Salviamo ogni canzone una volta sola usando un dizionario con chiave track_id
+    canzoni_uniche = {}
+    for riga in dati:
+        tid = riga["track_id"]
+        if tid not in canzoni_uniche:
+            canzoni_uniche[tid] = {
+                "nome": f"{riga['track_artist']} - {riga['track_name']}",
+                "durata": riga["duration_ms"],
+                "tempo": riga["tempo"]
+            }
+            
+    durate = [c["durata"] for c in canzoni_uniche.values()]
+    tempi = [c["tempo"] for c in canzoni_uniche.values()]
+    
+    min_durata = min(durate)
+    max_durata = max(durate)
+    media_durata_ms = sum(durate) / len(durate)
+    
+    # Trovare la più lunga e la più corta
+    piu_lunga = next(c["nome"] for c in canzoni_uniche.values() if c["durata"] == max_durata)
+    piu_corta = next(c["nome"] for c in canzoni_uniche.values() if c["durata"] == min_durata)
+    
+    tempo_medio = round(sum(tempi) / len(tempi), 2)
+    
+    return {
+        "minima": ms_a_minuti_secondi(min_durata),
+        "massima": ms_a_minuti_secondi(max_durata),
+        "media": ms_a_minuti_secondi(int(media_durata_ms)),
+        "canzone_piu_lunga": piu_lunga,
+        "canzone_piu_corta": piu_corta,
+        "tempo_medio_bpm": tempo_medio
+    }
 
 def domanda3(dati):
     """Risponde alla domanda 3. Restituisce la tabella
