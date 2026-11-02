@@ -1,17 +1,14 @@
 import csv
 
-FILE = "dati/nome-del-vostro-file.csv"
+FILE = "dati/spotify-canzoni.csv"
 
 def carica(nomefile):
-    """
-    Legge il file CSV di Spotify, converte i campi numerici principali 
-    e restituisce la lista delle righe valide e quelle scartate.
-    """
     dati = []
     scartate = 0
-    with open(nomefile, "r", encoding="utf-8", newline="") as f:
+    with open(nomefile, "r", encoding="utf-8-sig", newline="") as f:
         for riga in csv.DictReader(f):
             try:
+                riga = {k.strip(): v for k, v in riga.items()}
                 riga["track_popularity"] = int(riga["track_popularity"])
                 riga["duration_ms"] = int(riga["duration_ms"])
                 riga["tempo"] = float(str(riga["tempo"]).replace(",", "."))
@@ -53,7 +50,6 @@ def domanda1(dati):
 
 
 def ms_a_minuti_secondi(ms):
-    """Converte i millisecondi nel formato stringa mm:ss"""
     secondi_totali = ms // 1000
     minuti = secondi_totali // 60
     secondi = secondi_totali % 60
@@ -96,7 +92,7 @@ def domanda3(dati):
     somma_pop = {}
     conteggi = {}
     for riga in dati:
-        genere = riga["playlist_genere"]
+        genere = riga["playlist_genre"]
         pop = riga["track_popularity"]
         somma_pop[genere] = somma_pop.get(genere, 0) + pop
         conteggi[genere] = conteggi.get(genere, 0) + 1
@@ -119,14 +115,20 @@ def domanda_nostra(dati):
         "commento": "Le canzoni molto ballabili hanno popolarità superiore alla media." if media_ballabili > media_generale else "Non c'è una forte correlazione."
     }
 
+def scrivi_risultati(nomefile, intestazione, tabella):
+    with open(nomefile, "w", encoding="utf-8", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(intestazione)
+        writer.writerows(tabella)
+
 def main():
     dati, scartate = carica(FILE)
     print(f"Righe buone: {len(dati)}, scartate: {scartate}")
     print("Domanda 1:", domanda1(dati))
     print("Domanda 2:", domanda2(dati))
     tabella = domanda3(dati)
-    scrivi_risultati("risultati.csv", ["colonna1", "colonna2"], tabella)
+    scrivi_risultati("risultati.csv", ["Genere", "Numero_Righe", "Popolarita_Media"], tabella)
     print("Domanda nostra:", domanda_nostra(dati))
 
-
-main()
+if __name__ == "__main__":
+    main()
