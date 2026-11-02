@@ -109,7 +109,6 @@ def domanda3(dati):
 
 
 def domanda_nostra(dati):
-    # Canzoni molto ballabili (danceability maggiore di 0.8)
     ballabili = [riga["track_popularity"] for riga in dati if riga["danceability"] > 0.8]
     tutte_popolarita = [riga["track_popularity"] for riga in dati]
     media_ballabili = sum(ballabili) / len(ballabili) if ballabili else 0
