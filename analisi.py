@@ -96,7 +96,7 @@ def domanda3(dati):
     somma_pop = {}
     conteggi = {}
     for riga in dati:
-        genere = riga["playlist_genre"]
+        genere = riga["playlist_genere"]
         pop = riga["track_popularity"]
         somma_pop[genere] = somma_pop.get(genere, 0) + pop
         conteggi[genere] = conteggi.get(genere, 0) + 1
@@ -109,14 +109,16 @@ def domanda3(dati):
 
 
 def domanda_nostra(dati):
-    """La domanda inventata dal gruppo."""
-    return None
-
-
-def scrivi_risultati(nomefile, intestazione, tabella):
-    """Scrive la tabella in un CSV con csv.writer."""
-    pass
-
+    # Canzoni molto ballabili (danceability maggiore di 0.8)
+    ballabili = [riga["track_popularity"] for riga in dati if riga["danceability"] > 0.8]
+    tutte_popolarita = [riga["track_popularity"] for riga in dati]
+    media_ballabili = sum(ballabili) / len(ballabili) if ballabili else 0
+    media_generale = sum(tutte_popolarita) / len(tutte_popolarita) if tutte_popolarita else 0
+    return {
+        "popolarita_media_ballabili": round(media_ballabili, 2),
+        "popolarita_media_generale": round(media_generale, 2),
+        "commento": "Le canzoni molto ballabili hanno popolarità superiore alla media." if media_ballabili > media_generale else "Non c'è una forte correlazione."
+    }
 
 def main():
     dati, scartate = carica(FILE)
