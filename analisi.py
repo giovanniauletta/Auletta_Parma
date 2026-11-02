@@ -12,7 +12,6 @@ def carica(nomefile):
     with open(nomefile, "r", encoding="utf-8", newline="") as f:
         for riga in csv.DictReader(f):
             try:
-                # Conversione dei campi numerici utili per le domande
                 riga["track_popularity"] = int(riga["track_popularity"])
                 riga["duration_ms"] = int(riga["duration_ms"])
                 riga["tempo"] = float(str(riga["tempo"]).replace(",", "."))
@@ -26,21 +25,21 @@ def carica(nomefile):
 def domanda1(dati):
     totale_righe = len(dati)
     
-    # Set per contare i track_id unici
+    
     id_diversi = set(riga["track_id"] for riga in dati)
     
-    # Dizionario per contare in quante playlist/righe compare ciascun track_id
+    
     occorrenze = {}
-    nomi_canzoni = {} # Per ricordarci il titolo e l'artista
+    nomi_canzoni = {}
     for riga in dati:
         tid = riga["track_id"]
         occorrenze[tid] = occorrenze.get(tid, 0) + 1
         nomi_canzoni[tid] = f"{riga['track_artist']} - {riga['track_name']}"
     
-    # Canzoni che compaiono in più di una playlist (occorrenze > 1)
+   
     piu_playlist = [tid for tid, count in occorrenze.items() if count > 1]
     
-    # Trovare quella che compare in più playlist di tutte
+    
     id_max = max(occorrenze, key=occorrenze.get)
     canzone_top = nomi_canzoni[id_max]
     max_playlist = occorrenze[id_max]
@@ -61,7 +60,6 @@ def ms_a_minuti_secondi(ms):
     return f"{minuti}:{secondi:02d}"
 
 def domanda2(dati):
-    # Salviamo ogni canzone una volta sola usando un dizionario con chiave track_id
     canzoni_uniche = {}
     for riga in dati:
         tid = riga["track_id"]
@@ -79,7 +77,7 @@ def domanda2(dati):
     max_durata = max(durate)
     media_durata_ms = sum(durate) / len(durate)
     
-    # Trovare la più lunga e la più corta
+    
     piu_lunga = next(c["nome"] for c in canzoni_uniche.values() if c["durata"] == max_durata)
     piu_corta = next(c["nome"] for c in canzoni_uniche.values() if c["durata"] == min_durata)
     
@@ -95,9 +93,19 @@ def domanda2(dati):
     }
 
 def domanda3(dati):
-    """Risponde alla domanda 3. Restituisce la tabella
-    che finirà in risultati.csv: una lista di righe."""
-    return []
+    somma_pop = {}
+    conteggi = {}
+    for riga in dati:
+        genere = riga["playlist_genre"]
+        pop = riga["track_popularity"]
+        somma_pop[genere] = somma_pop.get(genere, 0) + pop
+        conteggi[genere] = conteggi.get(genere, 0) + 1
+    tabella = []
+    for genere in somma_pop:
+        media_pop = round(somma_pop[genere] / conteggi[genere], 2)
+        tabella.append([genere, conteggi[genere], media_pop])
+    tabella.sort(key=lambda x: x[2], reverse=True)
+    return tabella
 
 
 def domanda_nostra(dati):
