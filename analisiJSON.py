@@ -57,7 +57,7 @@ def ms_a_minuti_secondi(ms):
 
 
 def domanda2(dati):
-    # Salviamo ogni canzone una volta sola usando un dizionario con chiave track_id
+    
     canzoni_uniche = {}
     for riga in dati:
         tid = riga["track_id"]
@@ -75,7 +75,7 @@ def domanda2(dati):
     max_durata = max(durate)
     media_durata_ms = sum(durate) / len(durate)
 
-    # Trovare la più lunga e la più corta
+    
     piu_lunga = next(c["nome"] for c in canzoni_uniche.values() if c["durata"] == max_durata)
     piu_corta = next(c["nome"] for c in canzoni_uniche.values() if c["durata"] == min_durata)
 
