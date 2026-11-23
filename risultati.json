@@ -1,0 +1,32 @@
+[
+  {
+    "Genere": "pop",
+    "Numero_Righe": 5507,
+    "Popolarita_Media": 47.74
+  },
+  {
+    "Genere": "latin",
+    "Numero_Righe": 5155,
+    "Popolarita_Media": 47.03
+  },
+  {
+    "Genere": "rap",
+    "Numero_Righe": 5746,
+    "Popolarita_Media": 43.22
+  },
+  {
+    "Genere": "rock",
+    "Numero_Righe": 4951,
+    "Popolarita_Media": 41.73
+  },
+  {
+    "Genere": "r&b",
+    "Numero_Righe": 5431,
+    "Popolarita_Media": 41.22
+  },
+  {
+    "Genere": "edm",
+    "Numero_Righe": 6043,
+    "Popolarita_Media": 34.83
+  }
+]
